@@ -30,6 +30,9 @@ public class Main {
 			case 3:
 				bajaLibros(catalogo);
 				break;
+			case 4:
+				buscador(catalogo);
+				break;
 			default:
 				break;
 			}
@@ -134,7 +137,17 @@ public class Main {
 		}
 
 	}
-
+	
+	
+	/*
+	 * El siguiente método pide al usuario el isbn del libro que desea eliminar 
+	 * y lo envía al método busquedaLibros
+	 * para que este método le retorne la posición en el arraylist
+	 * 
+	 * una vez obtenida la posición en la que se encuentra el libro a eliminar
+	 * solicita confirmación y da de baja el libro
+	 * 
+	 */
 	private static void bajaLibros(ArrayList<Libro> catalogo) {
 
 		Scanner teclado = new Scanner(System.in);
@@ -159,6 +172,26 @@ public class Main {
 				catalogo.remove(posLibro);
 			}
 			else;
+		
+	}
+	
+	private static void buscador(ArrayList<Libro> catalogo) {
+		Scanner teclado = new Scanner(System.in);
+		String isbn;
+		int posLibro = 0;
+		char respuesta;
+
+		/*
+		 * ENTRADA POR TECLADO DE DATOS DEL LIBRO QUE VAMOS A BUSCAR
+		 */
+		System.out.println("Indique el ISBN del libro que desea buscar: ");
+		isbn = teclado.next();
+
+		posLibro = busquedaLibros(catalogo, isbn, posLibro);
+		/*
+		 * LIBRO ENCONTRADO MUESTRA LIBRO
+		 */
+		System.out.println("El libro buscado es: "+catalogo.get(posLibro).toString());
 		
 	}
 	
