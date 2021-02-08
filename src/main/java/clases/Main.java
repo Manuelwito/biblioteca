@@ -8,6 +8,8 @@ import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
+import javax.swing.JOptionPane;
+
 public class Main {
 
 	public static void main(String[] args) {
@@ -46,7 +48,7 @@ public class Main {
 			System.out.println("5. Ordenacion de Libros");
 			System.out.println("Introduce la opcion:");
 
-			opcion = leerOpcion(2);
+			opcion = leerOpcion(4);
 
 		} while (opcion <= 0);
 
@@ -133,20 +135,37 @@ public class Main {
 
 	}
 
-	private static void bajaLibros(ArrayList<Libro>catalogo) {
-		
+	private static void bajaLibros(ArrayList<Libro> catalogo) {
+
 		Scanner teclado = new Scanner(System.in);
-		String eliminable;
-		String isbn;
-		 
-		//ENTRADA POR TECLADO DE DATOS DEL LIBRO QUE VAMOS A ELIMINAR
+		String isbnEliminable;
+
+		// ENTRADA POR TECLADO DE DATOS DEL LIBRO QUE VAMOS A ELIMINAR
 		System.out.println("Indique el ISBN del libro que desea eliminar: ");
-		eliminable = teclado.next();
-		
-		
-		
-		
-		
-		
+		isbnEliminable = teclado.next();
+
+		busquedaLibros(catalogo, isbnEliminable);
+
 	}
+
+	private static int busquedaLibros(ArrayList<Libro> catalogo, String isbnEliminable) {
+		int posLibro = 0;
+		boolean encontrado = false;
+		int i = 0;
+		while (i < catalogo.size() && encontrado == false) {
+			if (catalogo.get(i).getIsbn().equalsIgnoreCase(isbnEliminable) == true) {
+				encontrado = true;
+			}
+			i++;
+		}
+		if (encontrado == false) {
+			System.out.println("El libro indicado no se encuentra en la Biblioteca");
+		} else {
+			posLibro = (i - 1);
+
+		}
+		return posLibro;
+
+	}
+
 }
