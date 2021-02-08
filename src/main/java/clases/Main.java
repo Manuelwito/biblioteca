@@ -138,22 +138,48 @@ public class Main {
 	private static void bajaLibros(ArrayList<Libro> catalogo) {
 
 		Scanner teclado = new Scanner(System.in);
-		String isbnEliminable;
-
-		// ENTRADA POR TECLADO DE DATOS DEL LIBRO QUE VAMOS A ELIMINAR
-		System.out.println("Indique el ISBN del libro que desea eliminar: ");
-		isbnEliminable = teclado.next();
-
-		busquedaLibros(catalogo, isbnEliminable);
-
-	}
-
-	private static int busquedaLibros(ArrayList<Libro> catalogo, String isbnEliminable) {
+		String isbn;
 		int posLibro = 0;
+		char respuesta;
+
+		/*
+		 * ENTRADA POR TECLADO DE DATOS DEL LIBRO QUE VAMOS A ELIMINAR
+		 */
+		System.out.println("Indique el ISBN del libro que desea eliminar: ");
+		isbn = teclado.next();
+
+		posLibro = busquedaLibros(catalogo, isbn, posLibro);
+		/*
+		 * ELIMINACIÓN DEL LIBRO
+		 */
+		System.out.println("El libro que desea eliminar es: "+catalogo.get(posLibro).toString());
+		System.out.println("¿Está seguro S/N?");
+		respuesta = teclado.next().charAt(0);
+			if (respuesta == 's' || respuesta == 'S') {
+				catalogo.remove(posLibro);
+			}
+			else;
+		
+	}
+	
+	
+	/*
+	 * EL SIGUIENTE METODO VA A RETORNAR LA POSICION DENTRO DEL 
+	 * ARRAYLIST EN LA QUE SE ENCUENTRA
+	 * EL LIBRO QUE ESTAMOS BUSCANDO: 
+	 * 
+	 * BIEN SEA PARA ELIMINARLO O PARA OBTENER LA INFORMACIÓN DEL MISMO.
+	 */
+	private static int busquedaLibros(ArrayList<Libro> catalogo, String isbn, int posLibro) {
+		
 		boolean encontrado = false;
+		
+		/*
+		 * BUSQUEDA SECUENCIAL PARA ENCONTRAR EL LIBRO CON EL ISBN INDICADO
+		 */
 		int i = 0;
 		while (i < catalogo.size() && encontrado == false) {
-			if (catalogo.get(i).getIsbn().equalsIgnoreCase(isbnEliminable) == true) {
+			if (catalogo.get(i).getIsbn().equalsIgnoreCase(isbn) == true) {
 				encontrado = true;
 			}
 			i++;
