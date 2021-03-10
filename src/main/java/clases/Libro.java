@@ -1,6 +1,8 @@
 package clases;
 
-public class Libro {
+import java.util.Comparator;
+
+public class Libro implements Comparable<Libro>, Comparator<Libro>{
 	
 	public Libro(String titulo, String isbn, Genero genero, String autor, Integer paginas) {
 		this.titulo = titulo;
@@ -65,7 +67,41 @@ public class Libro {
 		return "Libro [titulo: " + titulo + ", isbn: " + isbn + ", genero: " + genero + ", autor: " + autor + ", paginas: "
 				+ paginas + "]";
 	}
+	
+	public String toFichero() {
+		return titulo + "," + isbn + "," + genero + "," + autor + ","
+				+ paginas+"\n";
+	}
 
+
+	public boolean equals(Object o) {
+		boolean ig = false;
+		if(this == o) {
+			ig = true;
+		}
+		else {
+			Libro a = (Libro) o;
+			if (this.isbn.equalsIgnoreCase(a.isbn)) {
+				ig = true;
+			}
+		}
+		
+		return ig;
+	}
+	
+	public int compareTo(Libro o) {
+		
+		return this.titulo.compareTo(o.titulo);
+		
+		
+	}
+	
+	public int compare(Libro l1, Libro l2) {
+		return l1.getPaginas()-l2.getPaginas();
+		
+		
+		
+	}
 	
 	
 	/**

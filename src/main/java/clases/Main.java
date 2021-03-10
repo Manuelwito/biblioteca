@@ -3,12 +3,16 @@
  */
 package clases;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
-
-import javax.swing.JOptionPane;
 
 public class Main {
 
@@ -33,6 +37,15 @@ public class Main {
 			case 4:
 				buscador(catalogo);
 				break;
+			case 5:
+				ordenacionLibros(catalogo);
+				break;
+			case 6:
+				salvarFichero(catalogo);
+				break;
+			case 7:
+				cargarFichero(catalogo);
+				break;
 			default:
 				break;
 			}
@@ -49,9 +62,12 @@ public class Main {
 			System.out.println("3. Baja de Libros");
 			System.out.println("4. Búsqueda de Libros");
 			System.out.println("5. Ordenacion de Libros");
+			System.out.println("6. Salvar a Fichero");
+			System.out.println("7. Cargar Fichero");
+
 			System.out.println("Introduce la opcion:");
 
-			opcion = leerOpcion(4);
+			opcion = leerOpcion(7);
 
 		} while (opcion <= 0);
 
@@ -103,7 +119,7 @@ public class Main {
 	}
 
 	private static Libro procesaEntrada(String entrada) {
-		Libro libro = new Libro(entrada, entrada, null, entrada, null);
+		Libro libro = new Libro();
 
 		String[] datos = entrada.split(":");
 
@@ -131,18 +147,20 @@ public class Main {
 
 	private static void listaLibros(ArrayList<Libro> catalogo) {
 
-		for (Libro i : catalogo) {
-			System.out.println(i);
+		int j = 1;
 
+		for (Libro i : catalogo) {
+
+			System.out.println("Nº" + j + ": " + (i));
+			j++;
 		}
 
 	}
-	
-	
+
 	/*
-	 * El siguiente método pide al usuario el isbn del libro que desea eliminar 
-	 * y lo envía al método busquedaLibros
-	 * para que este método le retorne la posición en el arraylist
+	 * El siguiente método pide al usuario el isbn del libro que desea eliminar y lo
+	 * envía al método busquedaLibros para que este método le retorne la posición en
+	 * el arraylist
 	 * 
 	 * una vez obtenida la posición en la que se encuentra el libro a eliminar
 	 * solicita confirmación y da de baja el libro
@@ -151,30 +169,32 @@ public class Main {
 	private static void bajaLibros(ArrayList<Libro> catalogo) {
 
 		Scanner teclado = new Scanner(System.in);
-		String isbn;
 		int posLibro = 0;
 		char respuesta;
 
 		/*
 		 * ENTRADA POR TECLADO DE DATOS DEL LIBRO QUE VAMOS A ELIMINAR
 		 */
-		System.out.println("Indique el ISBN del libro que desea eliminar: ");
-		isbn = teclado.next();
+		System.out.println("Indique el número de la lista del libro que desea eliminar: ");
+		posLibro = teclado.nextInt() - 1;
 
-		posLibro = busquedaLibros(catalogo, isbn, posLibro);
-		/*
-		 * ELIMINACIÓN DEL LIBRO
-		 */
-		System.out.println("El libro que desea eliminar es: "+catalogo.get(posLibro).toString());
-		System.out.println("¿Está seguro S/N?");
-		respuesta = teclado.next().charAt(0);
+		if (posLibro >= 0) {
+			/*
+			 * ELIMINACIÓN DEL LIBRO
+			 */
+			System.out.println("El libro que desea eliminar es: " + catalogo.get(posLibro).toString());
+			System.out.println("¿Está seguro S/N?");
+			respuesta = teclado.next().charAt(0);
 			if (respuesta == 's' || respuesta == 'S') {
 				catalogo.remove(posLibro);
-			}
-			else;
-		
+			} else
+				;
+
+		} else {
+			System.out.println("El libro indicado no se encuentra en el catálogo.");
+		}
 	}
-	
+
 	private static void buscador(ArrayList<Libro> catalogo) {
 		Scanner teclado = new Scanner(System.in);
 		String isbn;
@@ -187,44 +207,129 @@ public class Main {
 		System.out.println("Indique el ISBN del libro que desea buscar: ");
 		isbn = teclado.next();
 
-		posLibro = busquedaLibros(catalogo, isbn, posLibro);
-		/*
-		 * LIBRO ENCONTRADO MUESTRA LIBRO
-		 */
-		System.out.println("El libro buscado es: "+catalogo.get(posLibro).toString());
-		
-	}
-	
-	
-	/*
-	 * EL SIGUIENTE METODO VA A RETORNAR LA POSICION DENTRO DEL 
-	 * ARRAYLIST EN LA QUE SE ENCUENTRA
-	 * EL LIBRO QUE ESTAMOS BUSCANDO: 
-	 * 
-	 * BIEN SEA PARA ELIMINARLO O PARA OBTENER LA INFORMACIÓN DEL MISMO.
-	 */
-	private static int busquedaLibros(ArrayList<Libro> catalogo, String isbn, int posLibro) {
-		
-		boolean encontrado = false;
-		
-		/*
-		 * BUSQUEDA SECUENCIAL PARA ENCONTRAR EL LIBRO CON EL ISBN INDICADO
-		 */
-		int i = 0;
-		while (i < catalogo.size() && encontrado == false) {
-			if (catalogo.get(i).getIsbn().equalsIgnoreCase(isbn) == true) {
-				encontrado = true;
-			}
-			i++;
-		}
-		if (encontrado == false) {
-			System.out.println("El libro indicado no se encuentra en la Biblioteca");
+		Libro a = new Libro();
+		a.setIsbn(isbn);
+		posLibro = catalogo.indexOf(a);
+		if (posLibro >= 0) {
+			/*
+			 * LIBRO ENCONTRADO MUESTRA LIBRO
+			 */
+			System.out.println("El libro buscado es: " + catalogo.get(posLibro).toString());
 		} else {
-			posLibro = (i - 1);
+			System.out.println("El libro indicado no se encuentra en el catálogo.");
+		}
+	}
+
+	private static void ordenacionLibros(ArrayList<Libro> catalogo) {
+		Scanner teclado = new Scanner(System.in);
+
+		char respuesta;
+
+		System.out.println("Indique si desea Ordenar los Libros por Título(T) o por nº de Páginas(P) ");
+
+		respuesta = teclado.next().charAt(0);
+		if (respuesta == 'T' || respuesta == 't') {
+
+			Collections.sort(catalogo);
+
+		} else if (respuesta == 'P' || respuesta == 'p') {
+
+			Collections.sort(catalogo, new Libro());
+			;
 
 		}
-		return posLibro;
 
+		System.out.println("Respuesta Incorrecta");
+
+	}
+
+	public static void salvarFichero(ArrayList<Libro> catalogo) {
+
+		Scanner entrada = new Scanner(System.in);
+		String nombre_archivo;
+
+		System.out.println("Indique el nombre del fichero en el que va a guardar su biblioteca: ");
+
+		nombre_archivo = entrada.next();
+		File biblioteca = new File(nombre_archivo);
+		try {
+
+			if (biblioteca.createNewFile()) {
+				System.out.println("Archivo creado: " + biblioteca.getName());
+				System.out.println(biblioteca.getAbsoluteFile());
+
+			} else {
+				System.out.println("Archivo ya existe.");
+			}
+		} catch (IOException e) {
+			System.out.println("Ha ocurrido un error.");
+			e.printStackTrace();
+		}
+
+		String ruta_archivo = biblioteca.getAbsolutePath();
+
+		try {
+			FileWriter escritura = new FileWriter(ruta_archivo);
+			for (int i = 0; i < catalogo.size(); i++) {
+
+				escritura.write(catalogo.get(i).toFichero());
+
+			}
+
+			escritura.close();
+
+		} catch (Exception e) {
+
+		}
+	}
+
+	/*
+	 * METODO QUE SOLICITA AL USUARIO EL NOMBRE DEL FICHERO.
+	 */
+	public static ArrayList cargarFichero(ArrayList<Libro> catalogo) {
+
+		Scanner entrada = new Scanner(System.in);
+		String archivo_leer;
+		System.out.println("Indique el nombre del fichero que desea leer: ");
+		archivo_leer = entrada.next();
+		String data;
+
+		try {
+			File biblioteca = new File(archivo_leer);
+			Scanner lector = new Scanner(biblioteca);
+			while (lector.hasNextLine()) {
+				data = lector.nextLine();
+				System.out.println(data);
+
+			}
+
+			while (lector.hasNextLine()) {
+
+				data = lector.nextLine();
+
+
+				String[] datos = data.split(",");
+
+				String titulo = datos[0];
+				String isbn = datos[1];
+				Genero genero = Genero.getGenero(datos[2]);
+				String autor = datos[3];
+				Integer paginas = Integer.parseInt(datos[4]);
+
+
+				Libro libro = new Libro(titulo, isbn, genero, autor, paginas);
+				
+
+				catalogo.add(libro);
+
+			}
+
+			lector.close();
+		} catch (FileNotFoundException e) {
+			System.out.println("An error occurred.");
+			e.printStackTrace();
+		}
+		return catalogo;
 	}
 
 }
