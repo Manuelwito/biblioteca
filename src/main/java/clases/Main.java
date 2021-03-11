@@ -13,8 +13,13 @@ import java.util.Comparator;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
-
+/**
+ * 
+ * @author manuelramosillana
+ *
+ */
 public class Main {
+
 
 	public static void main(String[] args) {
 
@@ -46,6 +51,9 @@ public class Main {
 			case 7:
 				cargarFichero(catalogo);
 				break;
+			case 8:
+				limpiarCatalogo(catalogo);
+				break;
 			default:
 				break;
 			}
@@ -64,10 +72,11 @@ public class Main {
 			System.out.println("5. Ordenacion de Libros");
 			System.out.println("6. Salvar a Fichero");
 			System.out.println("7. Cargar Fichero");
+			System.out.println("8. Limpiar Catálogo");
 
 			System.out.println("Introduce la opcion:");
 
-			opcion = leerOpcion(7);
+			opcion = leerOpcion(8);
 
 		} while (opcion <= 0);
 
@@ -157,19 +166,17 @@ public class Main {
 
 	}
 
-	
 	/**
 	 * Una vez obtenida la posición en la que se encuentra el libro a eliminar
 	 * solicita confirmación y da de baja el libro
+	 * 
 	 * @param catalogo
 	 */
 	private static void bajaLibros(ArrayList<Libro> catalogo) {
-
 		Scanner teclado = new Scanner(System.in);
 		int posLibro = 0;
 		char respuesta;
 
-	
 		System.out.println("Indique el número de la lista del libro que desea eliminar: ");
 		posLibro = teclado.nextInt() - 1;
 
@@ -253,7 +260,6 @@ public class Main {
 	 * @param catalogo
 	 */
 	public static void salvarFichero(ArrayList<Libro> catalogo) {
-
 		Scanner teclado = new Scanner(System.in);
 		String nombre_archivo;
 
@@ -311,7 +317,6 @@ public class Main {
 	 * CATÁLOGO.
 	 */
 	public static void cargarFichero(ArrayList<Libro> catalogo) {
-
 		Scanner teclado = new Scanner(System.in);
 		String archivo_leer;
 		System.out.println("Indique el nombre del fichero que desea leer: ");
@@ -355,6 +360,26 @@ public class Main {
 			e.printStackTrace();
 		}
 
+	}
+
+	/**
+	 * Deja el catalogo vacío.
+	 * 
+	 * @param catalogo
+	 */
+	public static void limpiarCatalogo(ArrayList<Libro> catalogo) {
+		Scanner teclado = new Scanner(System.in);
+		char respuesta;
+
+		System.out.println("¿Está seguro de que desea vaciar todo el catálogo? (S/N)");
+
+		respuesta = teclado.next().charAt(0);
+		if (respuesta == 'S' || respuesta == 's') {
+			catalogo.clear();
+		} else {
+			// Cualquier otra respuesta se interpretará negativa y regresará a menu.
+
+		}
 	}
 
 }
